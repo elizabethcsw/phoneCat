@@ -5,14 +5,19 @@ describe('phoneList', function() {
 
   // Test the controller
   describe('PhoneListController', function() {
-    var ctrl;
+    var $httpBackend, ctrl;
 
-    beforeEach(inject(function($componentController) {
-     ctrl = $componentController('phoneList');
+    beforeEach(inject(function($componentController, _$httpBackend_) {
+      $httpBackend = _$httpBackend_;
+      $httpBackend.expectGET('phones/phones.json')
+                  .respond([{name: 'Nexus S'}, {name: 'Motorola DROID'}]);
+
+      ctrl = $componentController('phoneList');
     }));
 
     it('should create a `phones` model with 3 phones', inject(function($componentController) {
-      expect(ctrl.phones.length).toBe(3);
+      $httpBackend.flush();
+      expect(ctrl.phones.length).toBe(2);
     }));
 
     it('should create know the user name', inject(function($componentController) {
